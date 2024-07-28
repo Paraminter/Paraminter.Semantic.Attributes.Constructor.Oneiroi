@@ -31,7 +31,7 @@ internal static class CompilationFactory
             .Select(static (assembly) => MetadataReference.CreateFromFile(assembly.Location))
             .Cast<MetadataReference>();
 
-        return CSharpCompilation.Create("FakeAssembly", references: references, options: CompilationOptions);
+        return CSharpCompilation.Create("TestAssembly", references: references, options: CompilationOptions);
     }
 
     private static List<Assembly> ListAssemblies()
