@@ -11,7 +11,7 @@ using System;
 public sealed class SemanticAttributeConstructorAssociator
     : IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseCollector>
 {
-    /// <summary>Instantiates a <see cref="SemanticAttributeConstructorAssociator"/>, associating semantic type arguments.</summary>
+    /// <summary>Instantiates a <see cref="SemanticAttributeConstructorAssociator"/>, associating semantic attribute constructor arguments.</summary>
     public SemanticAttributeConstructorAssociator() { }
 
     void IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseCollector>.Handle(
