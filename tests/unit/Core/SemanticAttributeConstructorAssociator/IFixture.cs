@@ -3,9 +3,9 @@
 using Paraminter.Associators.Queries;
 using Paraminter.Queries.Handlers;
 using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Queries;
-using Paraminter.Semantic.Attributes.Constructor.Queries.Collectors;
+using Paraminter.Semantic.Attributes.Constructor.Queries.Handlers;
 
 internal interface IFixture
 {
-    public abstract IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseCollector> Sut { get; }
+    public abstract IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseHandler> Sut { get; }
 }

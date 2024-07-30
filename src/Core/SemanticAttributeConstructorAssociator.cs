@@ -2,35 +2,36 @@
 
 using Paraminter.Associators.Queries;
 using Paraminter.Queries.Handlers;
+using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Common;
 using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Queries;
-using Paraminter.Semantic.Attributes.Constructor.Queries.Collectors;
+using Paraminter.Semantic.Attributes.Constructor.Queries.Handlers;
 
 using System;
 
 /// <summary>Associates semantic attribute constructor arguments.</summary>
 public sealed class SemanticAttributeConstructorAssociator
-    : IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseCollector>
+    : IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseHandler>
 {
     /// <summary>Instantiates a <see cref="SemanticAttributeConstructorAssociator"/>, associating semantic attribute constructor arguments.</summary>
     public SemanticAttributeConstructorAssociator() { }
 
-    void IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseCollector>.Handle(
+    void IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseHandler>.Handle(
         IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData> query,
-        IInvalidatingAssociateSemanticAttributeConstructorQueryResponseCollector queryResponseCollector)
+        IInvalidatingAssociateSemanticAttributeConstructorQueryResponseHandler queryResponseHandler)
     {
         if (query is null)
         {
             throw new ArgumentNullException(nameof(query));
         }
 
-        if (queryResponseCollector is null)
+        if (queryResponseHandler is null)
         {
-            throw new ArgumentNullException(nameof(queryResponseCollector));
+            throw new ArgumentNullException(nameof(queryResponseHandler));
         }
 
         if (query.Data.Parameters.Count != query.Data.Arguments.Count)
         {
-            queryResponseCollector.Invalidator.Invalidate();
+            queryResponseHandler.Invalidator.Handle(InvalidateQueryResponseCommand.Instance);
 
             return;
         }
@@ -40,7 +41,9 @@ public sealed class SemanticAttributeConstructorAssociator
             var parameter = query.Data.Parameters[i];
             var argument = query.Data.Arguments[i];
 
-            queryResponseCollector.Associations.Add(parameter, argument);
+            var command = new AddSemanticAttributeConstructorAssociationCommand(parameter, argument);
+
+            queryResponseHandler.AssociationCollector.Handle(command);
         }
     }
 }
