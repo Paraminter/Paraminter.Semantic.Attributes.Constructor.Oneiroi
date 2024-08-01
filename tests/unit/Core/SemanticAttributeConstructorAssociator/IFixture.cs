@@ -1,11 +1,15 @@
 ﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi;
 
-using Paraminter.Associators.Queries;
-using Paraminter.Queries.Handlers;
-using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Queries;
-using Paraminter.Semantic.Attributes.Constructor.Queries.Handlers;
+using Moq;
+
+using Paraminter.Associators.Commands;
+using Paraminter.Commands.Handlers;
+using Paraminter.Semantic.Attributes.Constructor.Commands;
+using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Commands;
 
 internal interface IFixture
 {
-    public abstract IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseHandler> Sut { get; }
+    public abstract ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>> Sut { get; }
+
+    public abstract Mock<ICommandHandler<IRecordSemanticAttributeConstructorAssociationCommand>> RecorderMock { get; }
 }

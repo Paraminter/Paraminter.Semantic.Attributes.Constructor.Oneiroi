@@ -1,30 +1,41 @@
 ﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi;
 
-using Paraminter.Associators.Queries;
-using Paraminter.Queries.Handlers;
-using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Queries;
-using Paraminter.Semantic.Attributes.Constructor.Queries.Handlers;
+using Moq;
+
+using Paraminter.Associators.Commands;
+using Paraminter.Commands.Handlers;
+using Paraminter.Semantic.Attributes.Constructor.Commands;
+using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Commands;
 
 internal static class FixtureFactory
 {
     public static IFixture Create()
     {
-        SemanticAttributeConstructorAssociator sut = new();
+        Mock<ICommandHandler<IRecordSemanticAttributeConstructorAssociationCommand>> recorderMock = new();
 
-        return new Fixture(sut);
+        SemanticAttributeConstructorAssociator sut = new(recorderMock.Object);
+
+        return new Fixture(sut, recorderMock);
     }
 
     private sealed class Fixture
         : IFixture
     {
-        private readonly IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseHandler> Sut;
+        private readonly ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>> Sut;
+
+        private readonly Mock<ICommandHandler<IRecordSemanticAttributeConstructorAssociationCommand>> RecorderMock;
 
         public Fixture(
-            IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseHandler> sut)
+            ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>> sut,
+            Mock<ICommandHandler<IRecordSemanticAttributeConstructorAssociationCommand>> recorderMock)
         {
             Sut = sut;
+
+            RecorderMock = recorderMock;
         }
 
-        IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseHandler> IFixture.Sut => Sut;
+        ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>> IFixture.Sut => Sut;
+
+        Mock<ICommandHandler<IRecordSemanticAttributeConstructorAssociationCommand>> IFixture.RecorderMock => RecorderMock;
     }
 }

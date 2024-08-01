@@ -1,49 +1,48 @@
 ﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi;
 
-using Paraminter.Associators.Queries;
-using Paraminter.Queries.Handlers;
+using Paraminter.Associators.Commands;
+using Paraminter.Commands.Handlers;
+using Paraminter.Semantic.Attributes.Constructor.Commands;
+using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Commands;
 using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Common;
-using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Queries;
-using Paraminter.Semantic.Attributes.Constructor.Queries.Handlers;
 
 using System;
 
 /// <summary>Associates semantic attribute constructor arguments.</summary>
 public sealed class SemanticAttributeConstructorAssociator
-    : IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseHandler>
+    : ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>>
 {
+    private readonly ICommandHandler<IRecordSemanticAttributeConstructorAssociationCommand> Recorder;
+
     /// <summary>Instantiates a <see cref="SemanticAttributeConstructorAssociator"/>, associating semantic attribute constructor arguments.</summary>
-    public SemanticAttributeConstructorAssociator() { }
-
-    void IQueryHandler<IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData>, IInvalidatingAssociateSemanticAttributeConstructorQueryResponseHandler>.Handle(
-        IAssociateArgumentsQuery<IAssociateSemanticAttributeConstructorData> query,
-        IInvalidatingAssociateSemanticAttributeConstructorQueryResponseHandler queryResponseHandler)
+    /// <param name="recorder">Records associated semantic attribute constructor arguments.</param>
+    public SemanticAttributeConstructorAssociator(
+        ICommandHandler<IRecordSemanticAttributeConstructorAssociationCommand> recorder)
     {
-        if (query is null)
+        Recorder = recorder ?? throw new ArgumentNullException(nameof(recorder));
+    }
+
+    void ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>>.Handle(
+        IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData> command)
+    {
+        if (command is null)
         {
-            throw new ArgumentNullException(nameof(query));
+            throw new ArgumentNullException(nameof(command));
         }
 
-        if (queryResponseHandler is null)
+        if (command.Data.Parameters.Count != command.Data.Arguments.Count)
         {
-            throw new ArgumentNullException(nameof(queryResponseHandler));
-        }
-
-        if (query.Data.Parameters.Count != query.Data.Arguments.Count)
-        {
-            queryResponseHandler.Invalidator.Handle(InvalidateQueryResponseCommand.Instance);
-
             return;
         }
 
-        for (var i = 0; i < query.Data.Parameters.Count; i++)
+        for (var i = 0; i < command.Data.Parameters.Count; i++)
         {
-            var parameter = query.Data.Parameters[i];
-            var argument = query.Data.Arguments[i];
+            var parameter = command.Data.Parameters[i];
+            var argument = command.Data.Arguments[i];
 
-            var command = new AddSemanticAttributeConstructorAssociationCommand(parameter, argument);
+            var recordCommand = new RecordSemanticAttributeConstructorAssociationCommand(parameter, argument);
 
-            queryResponseHandler.AssociationCollector.Handle(command);
+            Recorder.Handle(recordCommand);
         }
     }
 }
