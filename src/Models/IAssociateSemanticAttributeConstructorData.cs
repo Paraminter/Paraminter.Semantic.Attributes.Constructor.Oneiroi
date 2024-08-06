@@ -1,4 +1,4 @@
-﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi.Commands;
+﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi.Models;
 
 using Microsoft.CodeAnalysis;
 

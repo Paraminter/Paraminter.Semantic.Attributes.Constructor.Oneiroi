@@ -1,23 +1,23 @@
 ﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi.Common;
 
-using Microsoft.CodeAnalysis;
-
-using Paraminter.Semantic.Attributes.Constructor.Commands;
+using Paraminter.Arguments.Semantic.Attributes.Constructor.Models;
+using Paraminter.Associators.Commands;
+using Paraminter.Parameters.Method.Models;
 
 internal sealed class RecordSemanticAttributeConstructorAssociationCommand
-    : IRecordSemanticAttributeConstructorAssociationCommand
+    : IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>
 {
-    private readonly IParameterSymbol Parameter;
-    private readonly TypedConstant Argument;
+    private readonly IMethodParameter Parameter;
+    private readonly ISemanticAttributeConstructorArgumentData ArgumentData;
 
     public RecordSemanticAttributeConstructorAssociationCommand(
-        IParameterSymbol parameter,
-        TypedConstant argument)
+        IMethodParameter parameter,
+        ISemanticAttributeConstructorArgumentData argumentData)
     {
         Parameter = parameter;
-        Argument = argument;
+        ArgumentData = argumentData;
     }
 
-    IParameterSymbol IRecordSemanticAttributeConstructorAssociationCommand.Parameter => Parameter;
-    TypedConstant IRecordSemanticAttributeConstructorAssociationCommand.Argument => Argument;
+    IMethodParameter IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>.Parameter => Parameter;
+    ISemanticAttributeConstructorArgumentData IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>.ArgumentData => ArgumentData;
 }
