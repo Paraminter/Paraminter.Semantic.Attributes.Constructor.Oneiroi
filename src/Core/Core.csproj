@@ -4,15 +4,16 @@
         <AssemblyName>Paraminter.Semantic.Attributes.Constructor.Oneiroi</AssemblyName>
         
         <PackageId>Paraminter.Semantic.Attributes.Constructor.Oneiroi</PackageId>
-        <Description>Provides general implementations of services related to a Paraminter associator specialized in semantic attribute constructor arguments.</Description>
+        <Description>Provides general implementations of services related to a Paraminter associator of semantic attribute constructor arguments.</Description>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Paraminter.Arguments.Semantic.Attributes.Constructor.Models" />
         <PackageReference Include="Paraminter.Associators.Commands" />
         <PackageReference Include="Paraminter.Commands.Handlers" />
-        <PackageReference Include="Paraminter.Semantic.Attributes.Constructor.Common.Commands" />
+        <PackageReference Include="Paraminter.Parameters.Method.Models" />
 
-        <ProjectReference Include="$(SolutionDir)\src\Commands\Commands.csproj" />
+        <ProjectReference Include="$(SolutionDir)\src\Models\Models.csproj" />
     </ItemGroup>
 
 </Project>
