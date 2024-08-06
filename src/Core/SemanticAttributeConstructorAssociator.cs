@@ -18,7 +18,7 @@ public sealed class SemanticAttributeConstructorAssociator
 
     /// <summary>Instantiates a <see cref="SemanticAttributeConstructorAssociator"/>, associating semantic attribute constructor arguments.</summary>
     /// <param name="recorder">Records associated semantic attribute constructor arguments.</param>
-    /// <param name="invalidator">Invalidates the record of associated semantic type arguments.</param>
+    /// <param name="invalidator">Invalidates the record of associated semantic attribute constructor arguments.</param>
     public SemanticAttributeConstructorAssociator(
         ICommandHandler<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>> recorder,
         ICommandHandler<IInvalidateArgumentAssociationsRecordCommand> invalidator)
