@@ -1,6 +1,6 @@
 ﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi.Common;
 
-using Paraminter.Associators.Commands;
+using Paraminter.Recorders.Commands;
 
 internal sealed class InvalidateArgumentAssociationsRecordCommand
     : IInvalidateArgumentAssociationsRecordCommand

@@ -3,9 +3,9 @@
 using Moq;
 
 using Paraminter.Arguments.Semantic.Attributes.Constructor.Models;
-using Paraminter.Associators.Commands;
 using Paraminter.Commands.Handlers;
 using Paraminter.Parameters.Method.Models;
+using Paraminter.Recorders.Commands;
 
 using System;
 
