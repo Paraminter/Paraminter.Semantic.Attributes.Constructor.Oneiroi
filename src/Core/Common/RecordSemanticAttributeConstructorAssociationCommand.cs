@@ -1,8 +1,8 @@
 ﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi.Common;
 
 using Paraminter.Arguments.Semantic.Attributes.Constructor.Models;
-using Paraminter.Associators.Commands;
 using Paraminter.Parameters.Method.Models;
+using Paraminter.Recorders.Commands;
 
 internal sealed class RecordSemanticAttributeConstructorAssociationCommand
     : IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>
