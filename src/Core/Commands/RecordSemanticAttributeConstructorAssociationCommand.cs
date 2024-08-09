@@ -1,4 +1,4 @@
-﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi.Common;
+﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi.Commands;
 
 using Paraminter.Arguments.Semantic.Attributes.Constructor.Models;
 using Paraminter.Parameters.Method.Models;
