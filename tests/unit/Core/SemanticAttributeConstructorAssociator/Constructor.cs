@@ -3,9 +3,10 @@
 using Moq;
 
 using Paraminter.Arguments.Semantic.Attributes.Constructor.Models;
+using Paraminter.Commands;
 using Paraminter.Cqs.Handlers;
 using Paraminter.Parameters.Method.Models;
-using Paraminter.Recorders.Commands;
+using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors;
 
 using System;
 
@@ -14,17 +15,17 @@ using Xunit;
 public sealed class Constructor
 {
     [Fact]
-    public void NullRecorder_ThrowsArgumentNullException()
+    public void NullIndividualAssociator_ThrowsArgumentNullException()
     {
-        var result = Record.Exception(() => Target(null!, Mock.Of<ICommandHandler<IInvalidateArgumentAssociationsRecordCommand>>()));
+        var result = Record.Exception(() => Target(null!, Mock.Of<ISemanticAttributeConstructorAssociatorErrorHandler>()));
 
         Assert.IsType<ArgumentNullException>(result);
     }
 
     [Fact]
-    public void NullInvalidator_ThrowsArgumentNullException()
+    public void NullErrorHandler_ThrowsArgumentNullException()
     {
-        var result = Record.Exception(() => Target(Mock.Of<ICommandHandler<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>>(), null!));
+        var result = Record.Exception(() => Target(Mock.Of<ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>>(), null!));
 
         Assert.IsType<ArgumentNullException>(result);
     }
@@ -32,15 +33,15 @@ public sealed class Constructor
     [Fact]
     public void ValidArguments_ReturnsAssociator()
     {
-        var result = Target(Mock.Of<ICommandHandler<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>>(), Mock.Of<ICommandHandler<IInvalidateArgumentAssociationsRecordCommand>>());
+        var result = Target(Mock.Of<ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>>(), Mock.Of<ISemanticAttributeConstructorAssociatorErrorHandler>());
 
         Assert.NotNull(result);
     }
 
     private static SemanticAttributeConstructorAssociator Target(
-        ICommandHandler<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>> recorder,
-        ICommandHandler<IInvalidateArgumentAssociationsRecordCommand> invalidator)
+        ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>> individualAssociator,
+        ISemanticAttributeConstructorAssociatorErrorHandler errorHandler)
     {
-        return new SemanticAttributeConstructorAssociator(recorder, invalidator);
+        return new SemanticAttributeConstructorAssociator(individualAssociator, errorHandler);
     }
 }

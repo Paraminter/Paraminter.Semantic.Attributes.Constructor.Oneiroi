@@ -6,9 +6,9 @@ using Paraminter.Models;
 
 using System.Collections.Generic;
 
-/// <summary>Represents data used to associate semantic attribute constructor arguments.</summary>
-public interface IAssociateSemanticAttributeConstructorData
-    : IAssociateArgumentsData
+/// <summary>Represents data used to associate all semantic attribute constructor arguments with parameters.</summary>
+public interface IAssociateAllSemanticAttributeConstructorArgumentsData
+    : IAssociateAllArgumentsData
 {
     /// <summary>The attribute constructor parameters.</summary>
     public abstract IReadOnlyList<IParameterSymbol> Parameters { get; }

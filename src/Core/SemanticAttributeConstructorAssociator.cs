@@ -1,35 +1,38 @@
 ﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi;
 
+using Microsoft.CodeAnalysis;
+
 using Paraminter.Arguments.Semantic.Attributes.Constructor.Models;
 using Paraminter.Commands;
 using Paraminter.Cqs.Handlers;
 using Paraminter.Parameters.Method.Models;
-using Paraminter.Recorders.Commands;
 using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Commands;
+using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors;
+using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
 using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Models;
 
 using System;
 
-/// <summary>Associates semantic attribute constructor arguments.</summary>
+/// <summary>Associates semantic attribute constructor arguments with parameters.</summary>
 public sealed class SemanticAttributeConstructorAssociator
-    : ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>>
+    : ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData>>
 {
-    private readonly ICommandHandler<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>> Recorder;
-    private readonly ICommandHandler<IInvalidateArgumentAssociationsRecordCommand> Invalidator;
+    private readonly ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>> IndividualAssociator;
+    private readonly ISemanticAttributeConstructorAssociatorErrorHandler ErrorHandler;
 
-    /// <summary>Instantiates a <see cref="SemanticAttributeConstructorAssociator"/>, associating semantic attribute constructor arguments.</summary>
-    /// <param name="recorder">Records associated semantic attribute constructor arguments.</param>
-    /// <param name="invalidator">Invalidates the record of associated semantic attribute constructor arguments.</param>
+    /// <summary>Instantiates an associator of semantic attribute constructor arguments with parameters.</summary>
+    /// <param name="individualAssociator">Associates individual semantic attribute constructor arguments with parameters.</param>
+    /// <param name="errorHandler">Handles encountered errors.</param>
     public SemanticAttributeConstructorAssociator(
-        ICommandHandler<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>> recorder,
-        ICommandHandler<IInvalidateArgumentAssociationsRecordCommand> invalidator)
+        ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>> individualAssociator,
+        ISemanticAttributeConstructorAssociatorErrorHandler errorHandler)
     {
-        Recorder = recorder ?? throw new ArgumentNullException(nameof(recorder));
-        Invalidator = invalidator ?? throw new ArgumentNullException(nameof(invalidator));
+        IndividualAssociator = individualAssociator ?? throw new ArgumentNullException(nameof(individualAssociator));
+        ErrorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
     }
 
-    void ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>>.Handle(
-        IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData> command)
+    void ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData>>.Handle(
+        IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData> command)
     {
         if (command is null)
         {
@@ -38,19 +41,26 @@ public sealed class SemanticAttributeConstructorAssociator
 
         if (command.Data.Parameters.Count != command.Data.Arguments.Count)
         {
-            Invalidator.Handle(InvalidateArgumentAssociationsRecordCommand.Instance);
+            ErrorHandler.DifferentNumberOfArgumentsAndParameters.Handle(HandleDifferentNumberOfArgumentsAndParametersCommand.Instance);
 
             return;
         }
 
         for (var i = 0; i < command.Data.Parameters.Count; i++)
         {
-            var parameter = new MethodParameter(command.Data.Parameters[i]);
-            var argumentData = new SemanticAttributeConstructorArgumentData(command.Data.Arguments[i]);
-
-            var recordCommand = new RecordSemanticAttributeConstructorAssociationCommand(parameter, argumentData);
-
-            Recorder.Handle(recordCommand);
+            AssociateArgument(command.Data.Parameters[i], command.Data.Arguments[i]);
         }
+    }
+
+    private void AssociateArgument(
+        IParameterSymbol parameterSymbol,
+        TypedConstant argument)
+    {
+        var parameter = new MethodParameter(parameterSymbol);
+        var argumentData = new SemanticAttributeConstructorArgumentData(argument);
+
+        var command = new AssociateSingleArgumentCommand(parameter, argumentData);
+
+        IndividualAssociator.Handle(command);
     }
 }

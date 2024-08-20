@@ -6,43 +6,43 @@ using Paraminter.Arguments.Semantic.Attributes.Constructor.Models;
 using Paraminter.Commands;
 using Paraminter.Cqs.Handlers;
 using Paraminter.Parameters.Method.Models;
-using Paraminter.Recorders.Commands;
+using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors;
 using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Models;
 
 internal static class FixtureFactory
 {
     public static IFixture Create()
     {
-        Mock<ICommandHandler<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> recorderMock = new();
-        Mock<ICommandHandler<IInvalidateArgumentAssociationsRecordCommand>> invalidatorMock = new();
+        Mock<ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> individualAssociatorMock = new();
+        Mock<ISemanticAttributeConstructorAssociatorErrorHandler> errorHandlerMock = new() { DefaultValue = DefaultValue.Mock };
 
-        SemanticAttributeConstructorAssociator sut = new(recorderMock.Object, invalidatorMock.Object);
+        SemanticAttributeConstructorAssociator sut = new(individualAssociatorMock.Object, errorHandlerMock.Object);
 
-        return new Fixture(sut, recorderMock, invalidatorMock);
+        return new Fixture(sut, individualAssociatorMock, errorHandlerMock);
     }
 
     private sealed class Fixture
         : IFixture
     {
-        private readonly ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>> Sut;
+        private readonly ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData>> Sut;
 
-        private readonly Mock<ICommandHandler<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> RecorderMock;
-        private readonly Mock<ICommandHandler<IInvalidateArgumentAssociationsRecordCommand>> InvalidatorMock;
+        private readonly Mock<ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> IndividualAssociatorMock;
+        private readonly Mock<ISemanticAttributeConstructorAssociatorErrorHandler> ErrorHandlerMock;
 
         public Fixture(
-            ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>> sut,
-            Mock<ICommandHandler<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> recorderMock,
-            Mock<ICommandHandler<IInvalidateArgumentAssociationsRecordCommand>> invalidatorMock)
+            ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData>> sut,
+            Mock<ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> individualAssociatorMock,
+            Mock<ISemanticAttributeConstructorAssociatorErrorHandler> errorHandlerMock)
         {
             Sut = sut;
 
-            RecorderMock = recorderMock;
-            InvalidatorMock = invalidatorMock;
+            IndividualAssociatorMock = individualAssociatorMock;
+            ErrorHandlerMock = errorHandlerMock;
         }
 
-        ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>> IFixture.Sut => Sut;
+        ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData>> IFixture.Sut => Sut;
 
-        Mock<ICommandHandler<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> IFixture.RecorderMock => RecorderMock;
-        Mock<ICommandHandler<IInvalidateArgumentAssociationsRecordCommand>> IFixture.InvalidatorMock => InvalidatorMock;
+        Mock<ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> IFixture.IndividualAssociatorMock => IndividualAssociatorMock;
+        Mock<ISemanticAttributeConstructorAssociatorErrorHandler> IFixture.ErrorHandlerMock => ErrorHandlerMock;
     }
 }

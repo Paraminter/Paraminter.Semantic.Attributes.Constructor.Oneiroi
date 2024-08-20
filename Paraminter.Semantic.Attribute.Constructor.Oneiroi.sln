@@ -33,6 +33,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticAttributeConstructo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "src\Models\Models.csproj", "{BD01ED58-D159-4ED0-8E63-8E08DB27C4B4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Errors", "Errors", "{A3696C11-0897-4510-9735-D2BFEF58D4F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticAttributeConstructorAssociatorErrorHandler", "tests\unit\Core\Errors\SemanticAttributeConstructorAssociatorErrorHandler\SemanticAttributeConstructorAssociatorErrorHandler.csproj", "{519486E5-5A96-4B57-B653-A61E1C424887}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +59,10 @@ Global
 		{BD01ED58-D159-4ED0-8E63-8E08DB27C4B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD01ED58-D159-4ED0-8E63-8E08DB27C4B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD01ED58-D159-4ED0-8E63-8E08DB27C4B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{519486E5-5A96-4B57-B653-A61E1C424887}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{519486E5-5A96-4B57-B653-A61E1C424887}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{519486E5-5A96-4B57-B653-A61E1C424887}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{519486E5-5A96-4B57-B653-A61E1C424887}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +77,8 @@ Global
 		{EA4091FC-C2CB-4240-9BF2-4473A71CCF44} = {B37C329F-DF53-4A7F-A1DE-200008F61486}
 		{8AD41441-80A3-4354-A082-DF4D48F112C3} = {EA4091FC-C2CB-4240-9BF2-4473A71CCF44}
 		{BD01ED58-D159-4ED0-8E63-8E08DB27C4B4} = {01733EC6-90B0-4B7C-8C8B-2FB357F9819D}
+		{A3696C11-0897-4510-9735-D2BFEF58D4F3} = {6485DB3F-AC7D-4133-A279-D8469C8042BF}
+		{519486E5-5A96-4B57-B653-A61E1C424887} = {A3696C11-0897-4510-9735-D2BFEF58D4F3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {03179225-A3B7-47F2-BED2-FFC518DCFD28}
