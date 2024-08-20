@@ -8,7 +8,7 @@ using Paraminter.Arguments.Semantic.Attributes.Constructor.Models;
 using Paraminter.Commands;
 using Paraminter.Cqs.Handlers;
 using Paraminter.Parameters.Method.Models;
-using Paraminter.Recorders.Commands;
+using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
 using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Models;
 
 using System;
@@ -29,37 +29,37 @@ public sealed class Handle
     }
 
     [Fact]
-    public void DifferentNumberOfParametersAndArguments_Invalidates()
+    public void DifferentNumberOfParametersAndArguments_HandlesError()
     {
-        Mock<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>> commandMock = new();
+        Mock<IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData>> commandMock = new();
 
         commandMock.Setup(static (command) => command.Data.Parameters).Returns([]);
         commandMock.Setup(static (command) => command.Data.Arguments).Returns([TypedConstantStore.GetNext()]);
 
         Target(commandMock.Object);
 
-        Fixture.InvalidatorMock.Verify(static (invalidator) => invalidator.Handle(It.IsAny<IInvalidateArgumentAssociationsRecordCommand>()), Times.AtLeastOnce());
+        Fixture.ErrorHandlerMock.Verify(static (handler) => handler.DifferentNumberOfArgumentsAndParameters.Handle(It.IsAny<IHandleDifferentNumberOfArgumentsAndParametersCommand>()), Times.Once());
 
-        Fixture.RecorderMock.Verify(static (recorder) => recorder.Handle(It.IsAny<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>()), Times.Never());
+        Fixture.IndividualAssociatorMock.Verify(static (associator) => associator.Handle(It.IsAny<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>()), Times.Never());
     }
 
     [Fact]
-    public void NoParametersOrArguments_RecordsNone()
+    public void NoParametersOrArguments_AssociatesNone()
     {
-        Mock<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>> commandMock = new();
+        Mock<IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData>> commandMock = new();
 
         commandMock.Setup(static (command) => command.Data.Parameters).Returns([]);
         commandMock.Setup(static (command) => command.Data.Arguments).Returns([]);
 
         Target(commandMock.Object);
 
-        Fixture.InvalidatorMock.Verify(static (invalidator) => invalidator.Handle(It.IsAny<IInvalidateArgumentAssociationsRecordCommand>()), Times.Never());
+        Fixture.ErrorHandlerMock.Verify(static (handler) => handler.DifferentNumberOfArgumentsAndParameters.Handle(It.IsAny<IHandleDifferentNumberOfArgumentsAndParametersCommand>()), Times.Never());
 
-        Fixture.RecorderMock.Verify(static (recorder) => recorder.Handle(It.IsAny<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>()), Times.Never());
+        Fixture.IndividualAssociatorMock.Verify(static (associator) => associator.Handle(It.IsAny<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>()), Times.Never());
     }
 
     [Fact]
-    public void SameNumberOfParametersAndArguments_RecordsAllPairwise()
+    public void SameNumberOfParametersAndArguments_AssociatesAllPairwise()
     {
         var parameter1 = Mock.Of<IParameterSymbol>();
         var parameter2 = Mock.Of<IParameterSymbol>();
@@ -67,28 +67,28 @@ public sealed class Handle
         var argument1 = TypedConstantStore.GetNext();
         var argument2 = TypedConstantStore.GetNext();
 
-        Mock<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData>> commandMock = new();
+        Mock<IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData>> commandMock = new();
 
         commandMock.Setup(static (command) => command.Data.Parameters).Returns([parameter1, parameter2]);
         commandMock.Setup(static (command) => command.Data.Arguments).Returns([argument1, argument2]);
 
         Target(commandMock.Object);
 
-        Fixture.InvalidatorMock.Verify(static (invalidator) => invalidator.Handle(It.IsAny<IInvalidateArgumentAssociationsRecordCommand>()), Times.Never());
+        Fixture.ErrorHandlerMock.Verify(static (handler) => handler.DifferentNumberOfArgumentsAndParameters.Handle(It.IsAny<IHandleDifferentNumberOfArgumentsAndParametersCommand>()), Times.Never());
 
-        Fixture.RecorderMock.Verify(static (recorder) => recorder.Handle(It.IsAny<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>()), Times.Exactly(2));
-        Fixture.RecorderMock.Verify(RecordExpression(parameter1, argument1), Times.Once());
-        Fixture.RecorderMock.Verify(RecordExpression(parameter2, argument2), Times.Once());
+        Fixture.IndividualAssociatorMock.Verify(static (associator) => associator.Handle(It.IsAny<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>()), Times.Exactly(2));
+        Fixture.IndividualAssociatorMock.Verify(AssociateIndividualExpression(parameter1, argument1), Times.Once());
+        Fixture.IndividualAssociatorMock.Verify(AssociateIndividualExpression(parameter2, argument2), Times.Once());
     }
 
-    private static Expression<Action<ICommandHandler<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>>> RecordExpression(
+    private static Expression<Action<ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>>> AssociateIndividualExpression(
         IParameterSymbol parameter,
         TypedConstant argument)
     {
-        return (recorder) => recorder.Handle(It.Is(MatchRecordCommand(parameter, argument)));
+        return (associator) => associator.Handle(It.Is(MatchAssociateIndividualCommand(parameter, argument)));
     }
 
-    private static Expression<Func<IRecordArgumentAssociationCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>, bool>> MatchRecordCommand(
+    private static Expression<Func<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>, bool>> MatchAssociateIndividualCommand(
         IParameterSymbol parameterSymbol,
         TypedConstant argument)
     {
@@ -110,7 +110,7 @@ public sealed class Handle
     }
 
     private void Target(
-        IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorData> command)
+        IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData> command)
     {
         Fixture.Sut.Handle(command);
     }
