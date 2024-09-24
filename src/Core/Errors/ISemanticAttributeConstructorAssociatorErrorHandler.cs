@@ -1,7 +1,7 @@
-﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors;
+﻿namespace Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors;
 
+using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
 using Paraminter.Cqs.Handlers;
-using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
 
 /// <summary>Handles errors encountered when associating semantic attribute constructor arguments with parameters.</summary>
 public interface ISemanticAttributeConstructorAssociatorErrorHandler

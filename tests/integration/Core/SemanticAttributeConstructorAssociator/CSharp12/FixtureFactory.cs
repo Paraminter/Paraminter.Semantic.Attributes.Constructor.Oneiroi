@@ -1,48 +1,49 @@
-﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi;
+﻿namespace Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi;
 
 using Moq;
 
 using Paraminter.Arguments.Semantic.Attributes.Constructor.Models;
-using Paraminter.Commands;
+using Paraminter.Associating.Commands;
+using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors;
+using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Models;
 using Paraminter.Cqs.Handlers;
+using Paraminter.Pairing.Commands;
 using Paraminter.Parameters.Method.Models;
-using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors;
-using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Models;
 
 internal static class FixtureFactory
 {
     public static IFixture Create()
     {
-        Mock<ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> individualAssociatorMock = new();
+        Mock<ICommandHandler<IPairArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> pairerMock = new();
         Mock<ISemanticAttributeConstructorAssociatorErrorHandler> errorHandlerMock = new() { DefaultValue = DefaultValue.Mock };
 
-        SemanticAttributeConstructorAssociator sut = new(individualAssociatorMock.Object, errorHandlerMock.Object);
+        SemanticAttributeConstructorAssociator sut = new(pairerMock.Object, errorHandlerMock.Object);
 
-        return new Fixture(sut, individualAssociatorMock, errorHandlerMock);
+        return new Fixture(sut, pairerMock, errorHandlerMock);
     }
 
     private sealed class Fixture
         : IFixture
     {
-        private readonly ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData>> Sut;
+        private readonly ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorArgumentsData>> Sut;
 
-        private readonly Mock<ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> IndividualAssociatorMock;
+        private readonly Mock<ICommandHandler<IPairArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> PairerMock;
         private readonly Mock<ISemanticAttributeConstructorAssociatorErrorHandler> ErrorHandlerMock;
 
         public Fixture(
-            ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData>> sut,
-            Mock<ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> individualAssociatorMock,
+            ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorArgumentsData>> sut,
+            Mock<ICommandHandler<IPairArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> pairerMock,
             Mock<ISemanticAttributeConstructorAssociatorErrorHandler> errorHandlerMock)
         {
             Sut = sut;
 
-            IndividualAssociatorMock = individualAssociatorMock;
+            PairerMock = pairerMock;
             ErrorHandlerMock = errorHandlerMock;
         }
 
-        ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData>> IFixture.Sut => Sut;
+        ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorArgumentsData>> IFixture.Sut => Sut;
 
-        Mock<ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> IFixture.IndividualAssociatorMock => IndividualAssociatorMock;
+        Mock<ICommandHandler<IPairArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>> IFixture.PairerMock => PairerMock;
         Mock<ISemanticAttributeConstructorAssociatorErrorHandler> IFixture.ErrorHandlerMock => ErrorHandlerMock;
     }
 }
