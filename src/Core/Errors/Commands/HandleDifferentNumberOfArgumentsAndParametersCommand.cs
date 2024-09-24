@@ -1,4 +1,4 @@
-﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
+﻿namespace Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
 
 internal sealed class HandleDifferentNumberOfArgumentsAndParametersCommand
     : IHandleDifferentNumberOfArgumentsAndParametersCommand

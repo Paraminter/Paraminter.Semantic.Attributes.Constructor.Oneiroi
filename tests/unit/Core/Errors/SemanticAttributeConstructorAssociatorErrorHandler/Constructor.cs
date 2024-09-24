@@ -1,9 +1,9 @@
-﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors;
+﻿namespace Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors;
 
 using Moq;
 
+using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
 using Paraminter.Cqs.Handlers;
-using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
 
 using System;
 

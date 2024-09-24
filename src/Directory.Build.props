@@ -9,8 +9,8 @@
 
         <Owners>Paraminter</Owners>
         <Authors>ErikWe</Authors>
-        <PackageProjectUrl>https://github.com/Paraminter/Paraminter.Semantic.Attributes.Constructor.Oneiroi</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/Paraminter/Paraminter.Semantic.Attributes.Constructor.Oneiroi</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/Paraminter/Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Paraminter/Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi</RepositoryUrl>
         <PackageReadmeFile>README.nupkg.md</PackageReadmeFile>
         <PackageIcon>Logo.png</PackageIcon>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>

@@ -1,38 +1,39 @@
-﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi;
+﻿namespace Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi;
 
 using Microsoft.CodeAnalysis;
 
 using Paraminter.Arguments.Semantic.Attributes.Constructor.Models;
-using Paraminter.Commands;
+using Paraminter.Associating.Commands;
+using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Commands;
+using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors;
+using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
+using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Models;
 using Paraminter.Cqs.Handlers;
+using Paraminter.Pairing.Commands;
 using Paraminter.Parameters.Method.Models;
-using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Commands;
-using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors;
-using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
-using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Models;
 
 using System;
 
 /// <summary>Associates semantic attribute constructor arguments with parameters.</summary>
 public sealed class SemanticAttributeConstructorAssociator
-    : ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData>>
+    : ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorArgumentsData>>
 {
-    private readonly ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>> IndividualAssociator;
+    private readonly ICommandHandler<IPairArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>> Pairer;
     private readonly ISemanticAttributeConstructorAssociatorErrorHandler ErrorHandler;
 
     /// <summary>Instantiates an associator of semantic attribute constructor arguments with parameters.</summary>
-    /// <param name="individualAssociator">Associates individual semantic attribute constructor arguments with parameters.</param>
+    /// <param name="pairer">Pairs semantic attribute constructor arguments with parameters.</param>
     /// <param name="errorHandler">Handles encountered errors.</param>
     public SemanticAttributeConstructorAssociator(
-        ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>> individualAssociator,
+        ICommandHandler<IPairArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>> pairer,
         ISemanticAttributeConstructorAssociatorErrorHandler errorHandler)
     {
-        IndividualAssociator = individualAssociator ?? throw new ArgumentNullException(nameof(individualAssociator));
+        Pairer = pairer ?? throw new ArgumentNullException(nameof(pairer));
         ErrorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
     }
 
-    void ICommandHandler<IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData>>.Handle(
-        IAssociateAllArgumentsCommand<IAssociateAllSemanticAttributeConstructorArgumentsData> command)
+    void ICommandHandler<IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorArgumentsData>>.Handle(
+        IAssociateArgumentsCommand<IAssociateSemanticAttributeConstructorArgumentsData> command)
     {
         if (command is null)
         {
@@ -48,19 +49,19 @@ public sealed class SemanticAttributeConstructorAssociator
 
         for (var i = 0; i < command.Data.Parameters.Count; i++)
         {
-            AssociateArgument(command.Data.Parameters[i], command.Data.Arguments[i]);
+            PairArgument(command.Data.Parameters[i], command.Data.Arguments[i]);
         }
     }
 
-    private void AssociateArgument(
+    private void PairArgument(
         IParameterSymbol parameterSymbol,
         TypedConstant argument)
     {
         var parameter = new MethodParameter(parameterSymbol);
         var argumentData = new SemanticAttributeConstructorArgumentData(argument);
 
-        var command = new AssociateSingleArgumentCommand(parameter, argumentData);
+        var command = new PairArgumentCommand(parameter, argumentData);
 
-        IndividualAssociator.Handle(command);
+        Pairer.Handle(command);
     }
 }

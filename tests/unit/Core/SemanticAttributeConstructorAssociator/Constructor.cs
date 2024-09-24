@@ -1,12 +1,12 @@
-﻿namespace Paraminter.Semantic.Attributes.Constructor.Oneiroi;
+﻿namespace Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi;
 
 using Moq;
 
 using Paraminter.Arguments.Semantic.Attributes.Constructor.Models;
-using Paraminter.Commands;
+using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors;
 using Paraminter.Cqs.Handlers;
+using Paraminter.Pairing.Commands;
 using Paraminter.Parameters.Method.Models;
-using Paraminter.Semantic.Attributes.Constructor.Oneiroi.Errors;
 
 using System;
 
@@ -15,7 +15,7 @@ using Xunit;
 public sealed class Constructor
 {
     [Fact]
-    public void NullIndividualAssociator_ThrowsArgumentNullException()
+    public void NullPairer_ThrowsArgumentNullException()
     {
         var result = Record.Exception(() => Target(null!, Mock.Of<ISemanticAttributeConstructorAssociatorErrorHandler>()));
 
@@ -25,7 +25,7 @@ public sealed class Constructor
     [Fact]
     public void NullErrorHandler_ThrowsArgumentNullException()
     {
-        var result = Record.Exception(() => Target(Mock.Of<ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>>(), null!));
+        var result = Record.Exception(() => Target(Mock.Of<ICommandHandler<IPairArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>>(), null!));
 
         Assert.IsType<ArgumentNullException>(result);
     }
@@ -33,15 +33,15 @@ public sealed class Constructor
     [Fact]
     public void ValidArguments_ReturnsAssociator()
     {
-        var result = Target(Mock.Of<ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>>(), Mock.Of<ISemanticAttributeConstructorAssociatorErrorHandler>());
+        var result = Target(Mock.Of<ICommandHandler<IPairArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>>>(), Mock.Of<ISemanticAttributeConstructorAssociatorErrorHandler>());
 
         Assert.NotNull(result);
     }
 
     private static SemanticAttributeConstructorAssociator Target(
-        ICommandHandler<IAssociateSingleArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>> individualAssociator,
+        ICommandHandler<IPairArgumentCommand<IMethodParameter, ISemanticAttributeConstructorArgumentData>> pairer,
         ISemanticAttributeConstructorAssociatorErrorHandler errorHandler)
     {
-        return new SemanticAttributeConstructorAssociator(individualAssociator, errorHandler);
+        return new SemanticAttributeConstructorAssociator(pairer, errorHandler);
     }
 }
