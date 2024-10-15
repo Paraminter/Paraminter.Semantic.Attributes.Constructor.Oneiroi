@@ -6,7 +6,7 @@ using Paraminter.Arguments.Semantic.Attributes.Constructor.Models;
 using Paraminter.Associating.Commands;
 using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors;
 using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Models;
-using Paraminter.Cqs.Handlers;
+using Paraminter.Cqs;
 using Paraminter.Pairing.Commands;
 using Paraminter.Parameters.Method.Models;
 

@@ -3,7 +3,7 @@
 using Moq;
 
 using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
-using Paraminter.Cqs.Handlers;
+using Paraminter.Cqs;
 
 internal static class FixtureFactory
 {
