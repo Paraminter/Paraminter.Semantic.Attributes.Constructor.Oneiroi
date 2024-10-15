@@ -1,7 +1,7 @@
 ﻿namespace Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors;
 
 using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
-using Paraminter.Cqs.Handlers;
+using Paraminter.Cqs;
 
 using System;
 
