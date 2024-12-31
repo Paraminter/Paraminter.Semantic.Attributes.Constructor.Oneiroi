@@ -3,7 +3,6 @@
 using Moq;
 
 using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
-using Paraminter.Cqs;
 
 using System;
 

@@ -1,7 +1,6 @@
 ﻿namespace Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors;
 
 using Paraminter.Associating.Semantic.Attributes.Constructor.Oneiroi.Errors.Commands;
-using Paraminter.Cqs;
 
 using Xunit;
 
